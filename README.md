@@ -2,6 +2,8 @@
 
 This project provides a comprehensive web tool for image preprocessing, built with **Python**, **OpenCV**, and **NumPy**, and deployed using **Streamlit**. It allows users to visually analyze the effects of various image manipulation and computer vision algorithms.
 
+Use images in "sample_images" folder to try out our tool!
+
 ## ✨ Features and Algorithms
 
 The tool is equipped with methods across three main categories: Noise Generation, Denoising (Filtering), and Feature Detection (Edge Detection).
