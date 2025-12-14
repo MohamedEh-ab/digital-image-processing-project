@@ -1,24 +1,29 @@
 import cv2
 import numpy as np
 
-def add_gaussian_noise(image):
-    noise = np.random.randint(0, 256, image.shape, dtype='uint8')
-    noisy_image = cv2.add(image, noise)
-    return noisy_image
+
+def add_gaussian_noise(image, mean=0, sigma=125.0):
+    img_float = image.astype(np.float32)
+    noise = np.random.normal(mean, sigma, img_float.shape).astype(np.float32)
+    noisy_float = img_float + noise
+    noisy_clamped = np.clip(noisy_float, 0, 255)
+    return noisy_clamped.astype(np.uint8)
 
 
-def add_salt_and_pepper_noise(image, salt_prob=0.01, pepper_prob=0.01):
+
+
+def add_salt_and_pepper_noise(image, salt_prob=0.1, pepper_prob=0.1):
     noisy_image = np.copy(image)
     total_pixels = image.shape[0] * image.shape[1]
     num_salt = int(total_pixels * salt_prob)
     num_pepper = int(total_pixels * pepper_prob)
 
     # Add salt noise
-    coords = [np.random.randint(0, i - 1, num_salt) for i in image.shape[:2]]
+    coords = [np.random.randint(0, i, num_salt) for i in image.shape[:2]]
     noisy_image[coords[0], coords[1], :] = 255
 
     # Add pepper noise
-    coords = [np.random.randint(0, i - 1, num_pepper) for i in image.shape[:2]]
+    coords = [np.random.randint(0, i, num_pepper) for i in image.shape[:2]]
     noisy_image[coords[0], coords[1], :] = 0
 
     return noisy_image
@@ -36,7 +41,7 @@ def histogram_equalization(image):
     return hist_img
 
 def difference_of_gaussians(image, sigma1=1.0, sigma2=2.0): # بديل Canny
-    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY, image)
+    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blur1 = cv2.GaussianBlur(gray_img, (0, 0), sigma1)
     blur2 = cv2.GaussianBlur(gray_img, (0, 0), sigma2)
     dog = cv2.subtract(blur1, blur2)
@@ -49,12 +54,11 @@ def non_max_suppression(magnitude, direction):  # المرحلة الثالثة 
     M, N = magnitude.shape
     Z = np.zeros((M, N), dtype=np.float32)
 
-    angle = direction
+    angle = direction.copy()
     angle[angle < 0] += 180
 
     for i in range(1, M-1):
         for j in range(1, N-1):
-            try:
                 q = 255
                 r = 255
 
@@ -79,9 +83,6 @@ def non_max_suppression(magnitude, direction):  # المرحلة الثالثة 
                     Z[i,j] = magnitude[i,j]
                 else:
                     Z[i,j] = 0
-
-            except IndexError as e:
-                pass
 
     return Z
 
