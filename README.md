@@ -1,5 +1,7 @@
 # 🛠️ Image Preprocessing Specialist Tool
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://digital-image-processing-project-jikt2b33gdmytcv3ycvyi2.streamlit.app/)
 
+---
 This project provides a comprehensive web tool for image preprocessing, built with **Python**, **OpenCV**, and **NumPy**, and deployed using **Streamlit**. It allows users to visually analyze the effects of various image manipulation and computer vision algorithms.
 
 Use images in "sample_images" folder to try out our tool!
